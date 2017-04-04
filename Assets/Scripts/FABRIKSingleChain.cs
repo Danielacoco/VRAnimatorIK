@@ -9,7 +9,7 @@ public class FABRIKSingleChain : MonoBehaviour {
 
 	public float tolerance = 0.1f;
 
-	public Transform origin;
+	public Vector3 origin;
 	public float[] distances;
 
 
@@ -36,7 +36,7 @@ public class FABRIKSingleChain : MonoBehaviour {
 	}
 
 	void SolveSingleChainFABRIK(){
-		distToTarget = (Target.position - origin.position).magnitude;
+		distToTarget = (Target.position - origin).magnitude;
 
 		if (distToTarget > totalLength) {
 			//target too far, out of reach
@@ -50,12 +50,39 @@ public class FABRIKSingleChain : MonoBehaviour {
 			// check whether the distance btw end effector and target is grater than our tolerance 
 			float endToTargetDist =  (Target.position - joints[joints.Length-1].position).magnitude;
 			while (endToTargetDist > tolerance) {
-				//do forward
-				//do backward
+				ForwardStep ();
+				BackwardStep ();
+				endToTargetDist = (Target.position - joints[joints.Length-1].position).magnitude;
 			}
 
 
 		}
 	
 	}
+
+	void ForwardStep(){
+		joints [joints.Length - 1].position = Target.position;
+		for (int i = joints.Length - 2; i >= 0; i--) {
+			//Debug.Log (i);
+			float dist = (joints[i + 1].position - joints [i].position).magnitude;
+			float lambda = distances [i] / dist;
+			// find new joint position 
+			joints[i].position = (1-lambda)*joints[i+1].position + lambda * joints[i].position;
+		}
+	}
+
+	void BackwardStep(){
+		//set first joint to origin
+		joints [0].position = origin;
+
+		for (int i = 0; i < joints.Length - 2; i++) {
+			float dist = (joints [i + 1].position - joints [i].position).magnitude;
+			float lambda = (distances [i] / dist);
+			// new joint position
+			joints[i+1].position = (1-lambda)*joints[i].position + lambda * joints[i+1].position;
+			
+		}
+	
+	}
+
 }
