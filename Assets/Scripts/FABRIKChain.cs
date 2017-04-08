@@ -28,28 +28,21 @@ public class FABRIKChain : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-
-
 		foreach (float l in distances) {
 			totalLength += l;
 		}
 		numJoints = joints.Length;
-		Debug.Log ("numJoints"); 
-		Debug.Log (numJoints);
-		Debug.Log ("numJoints");
-
-
-		//SolveChainFABRIK ();
+		Target = targetObj.transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//SolveChainFABRIK ();
 		
+		//SolveChainFABRIK ();
 	}
 
 	public void SolveChainFABRIK(){
+		
 		distToTarget = (Target - origin).magnitude;
 
 		if (distToTarget > totalLength) {
@@ -62,11 +55,13 @@ public class FABRIKChain : MonoBehaviour {
 		} else {
 			// target is reachable, we have our origin joint saved
 			// check whether the distance btw end effector and target is grater than our tolerance 
+			int iteration = 0;
 			float endToTargetDist =  (Target - joints[numJoints-1].position).magnitude;
-			while (endToTargetDist > tolerance) {
-				ForwardStep ();
+			while (endToTargetDist > tolerance && iteration < 20) {
 				BackwardStep ();
+				ForwardStep ();
 				endToTargetDist = (Target - joints[numJoints-1].position).magnitude;
+				iteration++;
 			}
 
 
@@ -75,18 +70,6 @@ public class FABRIKChain : MonoBehaviour {
 	}
 
 	public void ForwardStep(){
-		Debug.Log (numJoints - 1);
-		joints [numJoints - 1].position = Target;
-		for (int i = numJoints - 2; i >= 0; i--) {
-			//Debug.Log (i);
-			float dist = (joints[i + 1].position - joints [i].position).magnitude;
-			float lambda = distances [i] / dist;
-			// find new joint position 
-			joints[i].position = (1-lambda)*joints[i+1].position + lambda * joints[i].position;
-		}
-	}
-
-	public void BackwardStep(){
 		//set first joint to origin
 		joints [0].position = origin;
 
@@ -95,8 +78,20 @@ public class FABRIKChain : MonoBehaviour {
 			float lambda = (distances [i] / dist);
 			// new joint position
 			joints[i+1].position = (1-lambda)*joints[i].position + lambda * joints[i+1].position;
-			
+
 		}
+
+	}
+
+	public void BackwardStep(){
+		// set end effector as target
+		joints [numJoints - 1].position = Target;
+		for (int i = numJoints - 2; i >= 0; i--) {
+			float dist = (joints[i + 1].position - joints [i].position).magnitude;
+			float lambda = distances [i] / dist;
+			joints[i].position = (1-lambda)*joints[i+1].position + lambda * joints[i].position;
+		}
+		
 	
 	}
 
