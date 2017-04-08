@@ -8,6 +8,7 @@ public class FABRIKChain : MonoBehaviour {
 	public Transform[] joints;
 	public float[] distances;
 
+	public GameObject targetObj;
 	public int numJoints;
 
 	public float tolerance = 0.1f;
@@ -34,7 +35,7 @@ public class FABRIKChain : MonoBehaviour {
 			totalLength += l;
 		}
 		numJoints = joints.Length;
-		Debug.Log ("numJoints");
+		Debug.Log ("numJoints"); 
 		Debug.Log (numJoints);
 		Debug.Log ("numJoints");
 
