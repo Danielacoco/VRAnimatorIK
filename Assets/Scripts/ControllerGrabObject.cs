@@ -62,6 +62,7 @@ public class ControllerGrabObject : MonoBehaviour
     public void OnTriggerStay(Collider other)
     {
         Debug.Log("stay");
+        Debug.Log(other.tag);
         SetCollidingObject(other);
     }
     public void OnTriggerExit(Collider other)

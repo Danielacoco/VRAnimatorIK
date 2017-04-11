@@ -45,7 +45,7 @@ public class FABRIKMulti2 : MonoBehaviour {
 
 
 		Vector3 centroid = (posChain1 + posChain2) / 2.0f;
-		Debug.Log (centroid);
+		
 
 		//		chains [1].origin = centroid;
 		//		chains [1].joints [0].position = centroid;
