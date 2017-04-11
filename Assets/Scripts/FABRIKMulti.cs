@@ -48,7 +48,7 @@ public class FABRIKMulti : MonoBehaviour {
 		for (int j = 1; j <= 5; j++) {
 			//reser subbase position everytime
 			chains [j].joints[0].position = originalPos;
-			chains [j].BackwardStep ();
+			chains [j].ForwardStep ();
 			// save new subbase position in array
 			subBasePos [j - 1] = chains [j].joints [0].position;
 		}
