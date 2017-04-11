@@ -58,9 +58,8 @@ public class FABRIKChain : MonoBehaviour {
 			int iteration = 0;
 			float endToTargetDist =  (Target - joints[numJoints-1].position).magnitude;
 			while (endToTargetDist > tolerance && iteration < 20) {
-				ForwardStep ();
 				BackwardStep ();
-
+				ForwardStep ();
 				endToTargetDist = (Target - joints[numJoints-1].position).magnitude;
 				iteration++;
 			}
