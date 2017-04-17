@@ -16,7 +16,7 @@ public class Walker : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        duration = curve.segDuration * curve.controlPoints.Count - 1;
+        duration = curve.segDuration * curve.controlPoints.Count;
 
     }
 
@@ -34,6 +34,11 @@ public class Walker : MonoBehaviour {
 
             float timeParam = (boundedTime - curveNum * curve.segDuration) / curve.segDuration;
 
+            //Debug.Log("ABOUT TO EVAL CURVE");
+            //Debug.Log(boundedTime + " boundedTime");
+            //Debug.Log(duration + " duration");
+            //Debug.Log(curveNum + "curveNum");
+            //Debug.Log(timeParam + "timeParam");
             transform.localPosition = curve.EvalCurvePointSeg(timeParam, curveNum);
         }
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PositionCapture : MonoBehaviour {
 
-    private SteamVR_TrackedObject trackedObject;
+    //private SteamVR_TrackedObject trackedObject;
 
     //private SteamVR_Controller.Device Controller
     //{
@@ -12,19 +12,20 @@ public class PositionCapture : MonoBehaviour {
     //}
 
     // array that contains our end effectors        
-    public GameObject[] targets;
+    public Walker[] targets;
+    public GameObject[] geom;
 
     // total number of poses allowed;
     public int numCaptured;
 
-    public float sightLength = 100.0f;
+    //public float sightLength = 100.0f;
 
-    public GameObject selectedObj;
+    //public GameObject selectedObj;
 
     /* 2d array that will contain the saved positions by the user. These will be a curves control
      for each end effector */
 
-    private Vector3[,] targetPositions;
+    //private Vector3[,] targetPositions;
 
     private int capturedSoFar;
 
@@ -33,23 +34,26 @@ public class PositionCapture : MonoBehaviour {
     {
        
 
-        targetPositions = new Vector3[targets.Length, numCaptured];
+       // targetPositions = new Vector3[targets.Length, numCaptured];
     }
     // Use this for initialization
     void Start()
     {
     }
-    void CapturePos()
+    public void CapturePos()
     {
         if (capturedSoFar < numCaptured)
         {
             int i = 0;
-            foreach (GameObject eef in targets)
+            foreach (Walker w in targets)
             {
-                targetPositions[capturedSoFar, i] = eef.transform.position;
+                w.curve.controlPoints.Add(geom[i].transform.position);
                 i++;
             }
             capturedSoFar++;
+        } else
+        {
+            //display something on UI?
         }
     }
 
@@ -57,5 +61,37 @@ public class PositionCapture : MonoBehaviour {
     private void Update()
     {
     }
+
+    public void PlayAnim()
+    {
+        foreach (Walker w in targets)
+        {
+            //Debug.Log("CALLED");
+            w.play = true;
+
+        }
+
+    }
+
+    private void PauseAnim()
+    {
+        foreach (Walker w in targets)
+        {
+            Debug.Log("CALLED");
+            w.play = false;
+
+        }
+
+    }
+
+    private void ResetAnim()
+    {
+        foreach (Walker w in targets)
+        {
+            w.curve.clearControlPoints();
+
+        }
+    }
+
 
 }

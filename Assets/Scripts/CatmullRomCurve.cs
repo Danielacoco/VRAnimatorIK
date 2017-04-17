@@ -1,31 +1,29 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CatmullRomCurve : MonoBehaviour {
+public class CatmullRomCurve : MonoBehaviour
+{
 
     public bool catmull;
     public float segDuration = 1;
-    public List<Transform> controlPoints;
+    public List<Vector3> controlPoints;
     //public LineRenderer lineRenderer;
 
     private int numCurves = 0;
     private int layerOrder = 0;
     private int numSegments = 50;
     private int numPoints;
+    public int[] indeces;
 
     // Use this for initialization
     void Start()
     {
-        //if (!lineRenderer)
-        //{
-        //    lineRenderer = GetComponent<LineRenderer>();
-        //}
-        //lineRenderer.sortingOrder = layerOrder;
 
         if (catmull)
         {
-            numCurves = (int)controlPoints.Count - 1;
+            numCurves = (int)controlPoints.Count;
         }
         else
         {
@@ -33,52 +31,91 @@ public class CatmullRomCurve : MonoBehaviour {
         }
         numPoints = (int)controlPoints.Count;
 
-        DrawCurve();
+        // DrawCurve ();
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        DrawCurve();
+        numPoints = (int)controlPoints.Count;
+        // DrawCurve();
     }
 
     public int getNumCurves()
     {
-        return numCurves;
+        return numCurves = (int)controlPoints.Count;
     }
 
-    void DrawCurve()
+    public void clearControlPoints()
     {
-        for (int i = 0; i < numCurves; i++)
-        {
-            //if (i == 0 || i == controlPoints.Length - 2) continue;
-            for (int seg = 1; seg <= numSegments; seg++)
-            {
-                int indexStart = getStartIndex(i);
-                int indexEnd = getEndIndex(i);
-                float time = seg / (float)numSegments;
-                Vector3 point = EvalCurvePoint(time, indexStart, indexEnd);
-                // Debug.Log((i * numSegments + seg) + "NUMSEGS");
-                //lineRenderer.numPositions = (i * numSegments) + seg;
-                //lineRenderer.SetPosition((i * numSegments) + seg - 1, point);
-            }
-        }
+        controlPoints.Clear();
     }
+
+    //void DrawCurve()
+    //{
+    //    for (int i = 0; i < numCurves; i++)
+    //    {
+    //        //if (i == 0 || i == controlPoints.Length - 2) continue;
+    //        for (int seg = 1; seg <= numSegments; seg++)
+    //        {
+    //            int indexStart = getStartIndex(i);
+    //            int indexEnd = getEndIndex(i);
+    //            float time = seg / (float)numSegments;
+    //            Vector3 point = EvalCurvePoint(time, indexStart, indexEnd);
+    //           // Debug.Log((i * numSegments + seg) + "NUMSEGS");
+    //            lineRenderer.numPositions = (i * numSegments) + seg;
+    //            lineRenderer.SetPosition((i * numSegments) + seg-1, point);
+    //        }
+    //    }
+    //}
+
+    //public void ExtendCurve(ControlPoint cp)
+    //{
+    //    this.controlPoints.Add(cp.transform);
+    //    this.numPoints++;
+    //    this.numCurves++;
+    //}
 
     public Vector3 EvalCurvePointSeg(float time, int segNum)
     {
-        return EvalCurvePoint(time, getStartIndex(segNum), getEndIndex(segNum));
+      
+        getIndexArray(segNum);
+        
+        return EvalCurvePoint(time);
+        //Vector3 p = (controlPoints[0].position);
+        //return p;
     }
-    public int getStartIndex(int numSeg)
+    public void getIndexArray(int segNum)
     {
-        if (catmull)
+        int start = segNum - 1;
+        //int end = segNum + 2;
+        int currNum = 0;
+
+        int i = 0;
+        while (i < 4)
         {
-            return numSeg - 1;
-        }
-        else
-        {
-            return numSeg - 2;
+            //Debug.Log(i + " index value");
+            //Debug.Log(start + "startValue");
+            if (start < 0)
+            {
+                currNum = numPoints + start;
+                indeces[i] = currNum;
+              
+            }
+            else if (start > controlPoints.Count - 1)
+            {
+                currNum = start - numPoints;
+                indeces[i] = currNum;
+             
+            } else {
+                indeces[i] = start;
+                
+               
+            }
+            start++;
+            i++;
+            
+
         }
 
     }
@@ -96,15 +133,19 @@ public class CatmullRomCurve : MonoBehaviour {
 
     }
 
-    public Vector3 EvalCurvePoint(float time, int start, int end)
+    public Vector3 EvalCurvePoint(float time)
     {
 
         //Debug.Log(Mathf.Max(start, 0) + "MAX");
         //Debug.Log(start + " sTART");
-        Vector3 p1 = controlPoints[Mathf.Max(start, 0)].position;
-        Vector3 p2 = controlPoints[Mathf.Max(start + 1, 0)].position;
-        Vector3 p3 = controlPoints[Mathf.Min(end - 1, controlPoints.Count - 1)].position;
-        Vector3 p4 = controlPoints[Mathf.Min(end, controlPoints.Count - 1)].position;
+        //Debug.Log(controlPoints[indeces[0]]);
+        //Debug.Log(controlPoints[indeces[1]]);
+        //Debug.Log(controlPoints[indeces[2]]);
+        //Debug.Log(controlPoints[indeces[3]]);
+        Vector3 p1 = controlPoints[indeces[0]];
+        Vector3 p2 = controlPoints[indeces[1]];
+        Vector3 p3 = controlPoints[indeces[2]];
+        Vector3 p4 = controlPoints[indeces[3]];
         //The coefficients of the cubic polynomial (except the 0.5f * which I added later for performance)
         Vector3 a = 2f * p2;
         Vector3 b = p3 - p1;
@@ -117,4 +158,6 @@ public class CatmullRomCurve : MonoBehaviour {
 
         return pos1;
     }
+
+
 }

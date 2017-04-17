@@ -11,6 +11,8 @@ public class ControllerGrabObject : MonoBehaviour
 
     private GameObject holdingObject;
 
+    public PositionCapture animFunct;
+
     private SteamVR_Controller.Device Controller
     {
         get { return SteamVR_Controller.Input((int)trackedObj.index); }
@@ -28,6 +30,14 @@ public class ControllerGrabObject : MonoBehaviour
 
         }
 
+        if (Controller.GetHairTriggerDown())
+        {
+            animFunct.CapturePos();
+        }
+        if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
+        {
+            animFunct.PlayAnim();
+        }
         if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
         {
             if (holdingObject)
@@ -55,19 +65,20 @@ public class ControllerGrabObject : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        Debug.Log("enter");
+        //Debug.Log("enter");
         SetCollidingObject(other);
     }
 
     public void OnTriggerStay(Collider other)
     {
-        Debug.Log("stay");
-        Debug.Log(other.tag);
+        //Debug.Log("stay");
+        //Debug.Log(other.tag);
         SetCollidingObject(other);
     }
+
     public void OnTriggerExit(Collider other)
     {
-        Debug.Log("out");
+       // Debug.Log("out");
         if (!collidingObject)
         {
             return;
@@ -81,7 +92,7 @@ public class ControllerGrabObject : MonoBehaviour
     {
         holdingObject = collidingObject;
         collidingObject = null;
-        Debug.Log("yas");
+        //Debug.Log("yas");
 
         var joint = AddFixedJoint();
         joint.connectedBody = holdingObject.GetComponent<Rigidbody>();
