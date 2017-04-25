@@ -73,7 +73,7 @@ public class PositionCapture : MonoBehaviour {
 
     }
 
-    private void PauseAnim()
+    public void PauseAnim()
     {
         foreach (Walker w in targets)
         {
@@ -84,10 +84,11 @@ public class PositionCapture : MonoBehaviour {
 
     }
 
-    private void ResetAnim()
+    public void ResetAnim()
     {
         foreach (Walker w in targets)
         {
+            w.play = false;
             w.curve.clearControlPoints();
 
         }

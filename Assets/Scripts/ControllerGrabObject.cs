@@ -36,7 +36,7 @@ public class ControllerGrabObject : MonoBehaviour
         }
         if (Controller.GetPressDown(SteamVR_Controller.ButtonMask.Touchpad))
         {
-            animFunct.PlayAnim();
+            //animFunct.PlayAnim();
         }
         if (Controller.GetPressUp(SteamVR_Controller.ButtonMask.Grip))
         {
