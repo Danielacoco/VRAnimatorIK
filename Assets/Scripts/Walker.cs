@@ -24,7 +24,7 @@ public class Walker : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (play)
+        if (play &&  curve.controlPoints.Count == 5)
         {
             duration = curve.segDuration * curve.getNumCurves();
             progress += Time.deltaTime;
@@ -39,7 +39,11 @@ public class Walker : MonoBehaviour {
             //Debug.Log(duration + " duration");
             //Debug.Log(curveNum + "curveNum");
             //Debug.Log(timeParam + "timeParam");
-            transform.localPosition = curve.EvalCurvePointSeg(timeParam, curveNum);
+            if (play && curve.controlPoints.Count == 5)
+            {
+                transform.localPosition = curve.EvalCurvePointSeg(timeParam, curveNum);
+            }
+           
         }
     }
 }

@@ -142,21 +142,33 @@ public class CatmullRomCurve : MonoBehaviour
         //Debug.Log(controlPoints[indeces[1]]);
         //Debug.Log(controlPoints[indeces[2]]);
         //Debug.Log(controlPoints[indeces[3]]);
-        Vector3 p1 = controlPoints[indeces[0]];
-        Vector3 p2 = controlPoints[indeces[1]];
-        Vector3 p3 = controlPoints[indeces[2]];
-        Vector3 p4 = controlPoints[indeces[3]];
+        try
+        {
+            Vector3 p1 = controlPoints[indeces[0]];
+            Vector3 p2 = controlPoints[indeces[1]];
+            Vector3 p3 = controlPoints[indeces[2]];
+            Vector3 p4 = controlPoints[indeces[3]];
+
+            Vector3 a = 2f * p2;
+            Vector3 b = p3 - p1;
+            Vector3 c = 2f * p1 - 5f * p2 + 4f * p3 - p4;
+            Vector3 d = -p1 + 3f * p2 - 3f * p3 + p4;
+
+            //The cubic polynomial: a + b * t + c * t^2 + d * t^3
+            Vector3 pos1 = 0.5f * ((2 * p2) + (-p1 + p3) * time + (2 * p1 - 5 * p2 + 4 * p3 - p4) * Mathf.Pow(time, 2) + (-p1 + 3 * p2 - 3 * p3 + p4) * Mathf.Pow(time, 3));
+            Vector3 pos = 0.5f * (a + (b * time) + (c * time * time) + (d * time * time * time));
+
+            return pos1;
+
+        } catch (Exception e)
+        {
+            Debug.Log(" coudnt acces indeces");
+            Vector3 trouble = Vector3.zero;
+            return trouble;
+        }
+       
         //The coefficients of the cubic polynomial (except the 0.5f * which I added later for performance)
-        Vector3 a = 2f * p2;
-        Vector3 b = p3 - p1;
-        Vector3 c = 2f * p1 - 5f * p2 + 4f * p3 - p4;
-        Vector3 d = -p1 + 3f * p2 - 3f * p3 + p4;
-
-        //The cubic polynomial: a + b * t + c * t^2 + d * t^3
-        Vector3 pos1 = 0.5f * ((2 * p2) + (-p1 + p3) * time + (2 * p1 - 5 * p2 + 4 * p3 - p4) * Mathf.Pow(time, 2) + (-p1 + 3 * p2 - 3 * p3 + p4) * Mathf.Pow(time, 3));
-        Vector3 pos = 0.5f * (a + (b * time) + (c * time * time) + (d * time * time * time));
-
-        return pos1;
+        
     }
 
 

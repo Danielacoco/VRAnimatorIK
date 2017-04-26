@@ -47,6 +47,7 @@ public class PositionCapture : MonoBehaviour {
             int i = 0;
             foreach (Walker w in targets)
             {
+                Debug.Log("adding points");
                 w.curve.controlPoints.Add(geom[i].transform.position);
                 i++;
             }
@@ -90,8 +91,8 @@ public class PositionCapture : MonoBehaviour {
         {
             w.play = false;
             w.curve.clearControlPoints();
-
         }
+        capturedSoFar = 0;
     }
 
 
